@@ -1,0 +1,3 @@
+-cp ..
+-neko t.n
+-main Test
