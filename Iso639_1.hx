@@ -84,7 +84,7 @@ class Iso639_1 {
             "ka" => { rtl: false, name: "Georgian", nativeName:"ქართული" },
             "de" => { rtl: false, name: "German", nativeName:"Deutsch" },
             "el" => { rtl: false, name: "Greek", nativeName:"Ελληνικά" },
-            "gn" => { rtl: false, name: "Guaraní", nativeName:"Avañeẽ" },
+            "gn" => { rtl: false, name: "Guarani", nativeName:"Avañeẽ" },
             "gu" => { rtl: false, name: "Gujarati", nativeName:"ગુજરાતી" },
             "ht" => { rtl: false, name: "Haitian,Haitian Creole", nativeName:"Kreyòl ayisyen" },
             "ha" => { rtl: true,  name: "Hausa", nativeName:"هَوُسَ" },
