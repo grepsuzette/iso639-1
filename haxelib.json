@@ -4,7 +4,7 @@
   "license": "mit",
   "tags": ["iso", "iso639-1", "lg", "languages", "i18n"],
   "description": "Class mapping 2-letter language iso639-1 standard codes to `english name` and `native name`",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "releasenote": "first version",
   "contributors": ["emugel"],
   "dependencies": {
