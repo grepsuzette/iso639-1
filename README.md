@@ -1,6 +1,8 @@
 # Haxe Iso639-1 class
 
-ISO 639-1 defines Two-letter Codes standard for the Representation of Names of Languages. It has been confirmed in 2019. https://wikipedia.org/wiki/ISO_639-1
+ISO 639-1 defines Two-letter Codes standard for the Representation of Names of
+Languages. It has been (re-)confirmed in 2019, so, like Intel bugs, it is here to stay. 
+https://wikipedia.org/wiki/ISO_639-1
 
 It defines the following codes for Haxe:
 
