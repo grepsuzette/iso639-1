@@ -231,4 +231,12 @@ import tink.pure.Mapping;
     public function nativeName(code:String) : Option<String> 
         return _map.exists(code) ? Some(_map.get(code).nativeName) : None;
 
+    /** Sorted list of keys */
+    public function list() : List<String> {
+        var a = [ for (k in _map.keys()) k ];
+        function cmp (a:String,b:String):Int { return if (a<b) -1 else if (a>b) 1 else 0; }
+        a.sort(cmp); 
+        return Lambda.list(a);
+    }
+
 }
