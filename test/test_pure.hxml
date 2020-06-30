@@ -1,0 +1,6 @@
+-cp ..
+-neko t.n
+-main Test
+-lib tink_core
+-lib tink_pure
+-D tink_pure

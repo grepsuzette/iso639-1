@@ -8,34 +8,18 @@ import tink.pure.Mapping;
  * ISO 639-1 defines Two-letter Codes standard for the Representation of Names of Languages 
  * It has been confirmed in 2019.
  * This should be straightforward enough.
+ * The class is pure to facilitate work with coconut.ui.
  */
-class Iso639_1 {
-    // data are cached there when data(), so no time is taken 
-    // initializing a static var if unneeded.
-    static var _data : Map<String, { final rtl:Bool; final name:String; final nativeName:String; }>;
+@:pure class Iso639_1 {
 
-    public static function exists(code:String) : Bool 
-        return data().exists(code);
+    #if tink_pure
+    final _map : tink.pure.Mapping<String, { final rtl:Bool; final name:String; final nativeName:String; }>;
+    #else
+    final _map : Map<String, { final rtl:Bool; final name:String; final nativeName:String; }>;
+    #end
 
-    public static function isRightToLeft(code:String) : Option<Bool> 
-        return data().exists(code) ? Some(data().get(code).rtl) : None;
-
-    /**
-     * Some languages can have several names. 
-     * We show split(",")[0] here.
-     */
-    public static function name(code:String) : Option<String> 
-        return data().exists(code) ? Some(data().get(code).name) : None;
-
-    /**
-     * Some languages can have several native names. 
-     * We show split(",")[0] here.
-     */
-    public static function nativeName(code:String) : Option<String> 
-        return data().exists(code) ? Some(data().get(code).nativeName) : None;
-
-    public static function data() : Map<String, { final rtl:Bool; final name:String; final nativeName:String; }> 
-        return _data != null ? _data : _data = [
+    public function new(?customized:Map<String, { ?name: String, ?nativeName: String, ?rtl: Bool }>) {   
+        var d = [
             "ab" => { rtl: false, name: "Abkhaz", nativeName:"аҧсуа" },
             "aa" => { rtl: false, name: "Afar", nativeName:"Afaraf" },
             "af" => { rtl: false, name: "Afrikaans", nativeName:"Afrikaans" },
@@ -217,31 +201,34 @@ class Iso639_1 {
             "yi" => { rtl: true,  name: "Yiddish", nativeName: "ייִדיש‎" },
             "yo" => { rtl: false, name: "Yoruba", nativeName:"Yorùbá" },
             "za" => { rtl: false, name: "Zhuang,Chuang", nativeName:"Saɯ cueŋƅ" }
-    ];
-
-    /**
-     * To customize some names for defined symbols.
-     * Though the base list is probably complete enough, 
-     * you may want to modify some names yourself, depending on the needs and tone
-     * of your application's business. 
-     *
-     * For instance, for chinese nativeName is defined in the standard as "中文,汉语,漢語"
-     * (litterally "Culture of the Middle" and "Language of the Hans" written once in simplified
-     * characters and once this time in traditional characters (used in HK, Taiwan, Macau etc). 
-     *
-     * Iso639_1.nativeName("zh") will merely give back the first answer "中文".
-     * You can overwrite that in you app, e.g. `Iso639_1.overwriteNativeName("zh", "汉语");`
-     * Likewise there is a `overwriteName` method.
-     */
-    public static function overwriteName(code:String, name:String) : Void {
-        var v = data().get(code);
-        if (v == null) throw "No such language " + code + " iso639-1 code";
-        _data.set(code, { rtl: v.rtl, name: name, nativeName: v.nativeName});
+        ];
+        for (k => v in customized) {
+            var o = d.get(k);
+            if (o == null) throw "No such language " + k + " iso639-1 code";
+            if (v.name       != null) o.name       = v.name;
+            if (v.nativeName != null) o.nativeName = v.nativeName;
+            if (v.rtl        != null) o.rtl        = v.rtl ;
+            d.set(k, o); 
+        }
+        _map = [ for ( k => v in d )
+            k => { 
+                rtl        : v.rtl,
+                name       : v.name.split(",")[0],
+                nativeName : v.nativeName.split(",")[0]
+            } 
+        ];
     }
 
-    public static function overwriteNativeName(code:String, nativeName:String) : Void {
-        var v = data().get(code);
-        if (v == null) throw "No such language " + code + " iso639-1 code";
-        _data.set(code, { rtl: v.rtl, name: v.name, nativeName: nativeName});
-    }
+    public function exists(code:String) : Bool 
+        return _map.exists(code);
+
+    public function isRightToLeft(code:String) : Option<Bool> 
+        return _map.exists(code) ? Some(_map.get(code).rtl) : None;
+
+    public function name(code:String) : Option<String> 
+        return _map.exists(code) ? Some(_map.get(code).name) : None;
+
+    public function nativeName(code:String) : Option<String> 
+        return _map.exists(code) ? Some(_map.get(code).nativeName) : None;
+
 }
