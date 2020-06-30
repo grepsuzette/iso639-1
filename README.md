@@ -46,4 +46,21 @@ Lg.name("de");              // Some("german")
 Lg.nativeName("de");        // Some("Deutsch")
 ```
 
+# Customize the list
+
+Though the base list is probably complete enough, 
+you may want to modify some names yourself, depending on the needs and tone
+of your application's business. 
+
+For instance, for chinese nativeName is defined in the standard as "中文,汉语,漢語"
+(litterally "Culture of the Middle", "Language of the hans" (in simplified
+characters) and the same in traditional characters (used in HK, Taiwan,
+Macau etc). 
+
+`Iso639_1.nativeName("zh")` will merely give back the first answer "中文".
+You can overwrite that in you app, e.g. `Iso639_1.overwriteNativeName("zh", "汉语");`
+Likewise there is a `overwriteName` method.
+
+
+
 That's all for now, have fun.
