@@ -59,7 +59,7 @@ Some mappings like this can be useful in your code, e.g. in a coconut app:
 import Iso639_1;
 ...
 private static final _iso639_1 = new Iso639_1();
-public static function lgs : tink.pure.List<Lg> = _iso639_1.array();
+public static final lgs : tink.pure.List<Lg> = _iso639_1.array();
 public inline static function lg(code:String) : haxe.ds.Option<Lg> return _iso639_1.lg(code);
 ```
 
