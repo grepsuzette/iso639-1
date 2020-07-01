@@ -209,7 +209,7 @@ typedef Lg = {
             "yo" => { rtl: false, en: "Yoruba", native:"Yorùbá" },
             "za" => { rtl: false, en: "Zhuang,Chuang", native:"Saɯ cueŋƅ" }
         ];
-        for (k => v in customized) {
+        if (customized != null) for (k => v in customized) {
             var o = d.get(k);
             if (o == null) throw "No such language " + k + " iso639-1 code";
             if (v.en     != null) o.en       = v.en;
