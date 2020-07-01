@@ -24,7 +24,7 @@ class Test {
     public static function assertEquals(s1:String, s2:String, ?pos:haxe.PosInfos ) : Void 
         if (s1 != s2) pp('assertion fail: $s1 != $s2 at ${pos.fileName}:${pos.lineNumber}');
 
-    static final lg = new Lg([ "en" => { name: "ENGLISH", nativeName: "The Language of Shakespeare" }]);
+    static final lg = new Lg([ "en" => { en: "ENGLISH", native: "The Language of Shakespeare" }]);
 
     public static function main() {
         assertFalse(lg.exists("foo"));    // false

@@ -4,8 +4,15 @@ import haxe.ds.Option;
 import tink.pure.Mapping;
 #end
 
+typedef Lg = {
+    final code   : String;
+    final en     : String;
+    final native : String;
+    final rtl    : Bool;
+}
+
 /**
- * ISO 639-1 defines Two-letter Codes standard for the Representation of Names of Languages 
+ * ISO 639-1 defines Two-letter Codes standard for the Representation of names of Languages 
  * It has been confirmed in 2019.
  * This should be straightforward enough.
  * The class is pure to facilitate work with coconut.ui.
@@ -13,208 +20,209 @@ import tink.pure.Mapping;
 @:pure class Iso639_1 {
 
     #if tink_pure
-    final _map : tink.pure.Mapping<String, { final rtl:Bool; final name:String; final nativeName:String; }>;
+    final _map : tink.pure.Mapping<String, Lg>;
     #else
-    final _map : Map<String, { final rtl:Bool; final name:String; final nativeName:String; }>;
+    final _map : Map<String, Lg>;
     #end
 
-    public function new(?customized:Map<String, { ?name: String, ?nativeName: String, ?rtl: Bool }>) {   
+    public function new(?customized:Map<String, { ?en: String, ?native: String, ?rtl: Bool }>) {   
         var d = [
-            "ab" => { rtl: false, name: "Abkhaz", nativeName:"аҧсуа" },
-            "aa" => { rtl: false, name: "Afar", nativeName:"Afaraf" },
-            "af" => { rtl: false, name: "Afrikaans", nativeName:"Afrikaans" },
-            "ak" => { rtl: false, name: "Akan", nativeName:"Akan" },
-            "sq" => { rtl: false, name: "Albanian", nativeName:"Shqip" },
-            "am" => { rtl: false, name: "Amharic", nativeName:"አማርኛ" },
-            "ar" => { rtl: true,  name: "Arabic", nativeName: "العربية" },
-            "an" => { rtl: false, name: "Aragonese", nativeName:"Aragonés" },
-            "hy" => { rtl: false, name: "Armenian", nativeName:"Հայերեն" },
-            "as" => { rtl: false, name: "Assamese", nativeName:"অসমীয়া" },
-            "av" => { rtl: false, name: "Avaric", nativeName:"авар мацӀ, магӀарул мацӀ" },
-            "ae" => { rtl: false, name: "Avestan", nativeName:"avesta" },
-            "ay" => { rtl: false, name: "Aymara", nativeName:"aymar aru" },
-            "az" => { rtl: false, name: "Azerbaijani", nativeName:"azərbaycan dili" },
-            "bm" => { rtl: false, name: "Bambara", nativeName:"bamanankan" },
-            "ba" => { rtl: false, name: "Bashkir", nativeName:"башҡорт теле" },
-            "eu" => { rtl: false, name: "Basque", nativeName:"euskara,euskera" },
-            "be" => { rtl: false, name: "Belarusian", nativeName:"Беларуская" },
-            "bn" => { rtl: false, name: "Bengali", nativeName:"বাংলা" },
-            "bh" => { rtl: false, name: "Bihari", nativeName:"भोजपुरी" },
-            "bi" => { rtl: false, name: "Bislama", nativeName:"Bislama" },
-            "bs" => { rtl: false, name: "Bosnian", nativeName:"bosanski jezik" },
-            "br" => { rtl: false, name: "Breton", nativeName:"brezhoneg" },
-            "bg" => { rtl: false, name: "Bulgarian", nativeName:"български език" },
-            "my" => { rtl: false, name: "Burmese", nativeName:"ဗမာစာ" },
-            "ca" => { rtl: false, name: "Catalan,Valencian", nativeName:"Català" },
-            "ch" => { rtl: false, name: "Chamorro", nativeName:"Chamoru" },
-            "ce" => { rtl: false, name: "Chechen", nativeName:"нохчийн мотт" },
-            "ny" => { rtl: false, name: "Chichewa,Chewa,Nyanja", nativeName:"chinyanja,chiCheŵa" },
-            "zh" => { rtl: false, name: "Chinese", nativeName:"中文,汉语,漢語" },
-            "cv" => { rtl: false, name: "Chuvash", nativeName:"чӑваш чӗлхи" },
-            "kw" => { rtl: false, name: "Cornish", nativeName:"Kernewek" },
-            "co" => { rtl: false, name: "Corsican", nativeName:"corsu" },
-            "cr" => { rtl: false, name: "Cree", nativeName:"ᓀᐦᐃᔭᐍᐏᐣ" },
-            "hr" => { rtl: false, name: "Croatian", nativeName:"hrvatski" },
-            "cs" => { rtl: false, name: "Czech", nativeName:"česky,čeština" },
-            "da" => { rtl: false, name: "Danish", nativeName:"dansk" },
-            "dv" => { rtl: true,  name: "Divehi,Dhivehi,Maldivian", nativeName:"ދިވެހި" },
-            "nl" => { rtl: false, name: "Dutch", nativeName:"Nederlands,Vlaams" },
-            "en" => { rtl: false, name: "English", nativeName:"English" },
-            "eo" => { rtl: false, name: "Esperanto", nativeName:"Esperanto" },
-            "et" => { rtl: false, name: "Estonian", nativeName:"eesti" },
-            "ee" => { rtl: false, name: "Ewe", nativeName:"Eʋegbe" },
-            "fo" => { rtl: false, name: "Faroese", nativeName:"føroyskt" },
-            "fj" => { rtl: false, name: "Fijian", nativeName:"vosa Vakaviti" },
-            "fi" => { rtl: false, name: "Finnish", nativeName:"suomi" },
-            "fr" => { rtl: false, name: "French", nativeName:"français" },
-            "ff" => { rtl: false, name: "Fula,Fulahr,Pulaarr,Pular", nativeName:"Fulfulde,Pulaar,Pular" },
-            "gl" => { rtl: false, name: "Galician", nativeName:"Galego" },
-            "ka" => { rtl: false, name: "Georgian", nativeName:"ქართული" },
-            "de" => { rtl: false, name: "German", nativeName:"Deutsch" },
-            "el" => { rtl: false, name: "Greek", nativeName:"Ελληνικά" },
-            "gn" => { rtl: false, name: "Guarani", nativeName:"Avañeẽ" },
-            "gu" => { rtl: false, name: "Gujarati", nativeName:"ગુજરાતી" },
-            "ht" => { rtl: false, name: "Haitian,Haitian Creole", nativeName:"Kreyòl ayisyen" },
-            "ha" => { rtl: true,  name: "Hausa", nativeName:"هَوُسَ" },
-            "he" => { rtl: true,  name: "Hebrew", nativeName:"עברית‎"},
-            "hz" => { rtl: false, name: "Herero", nativeName:"Otjiherero" },
-            "hi" => { rtl: false, name: "Hindi", nativeName:"हिन्दी, हिंदी" },
-            "ho" => { rtl: false, name: "Hiri Motu", nativeName:"Hiri Motu" },
-            "hu" => { rtl: false, name: "Hungarian", nativeName:"Magyar" },
-            "ia" => { rtl: false, name: "Interlingua", nativeName:"Interlingua" },
-            "id" => { rtl: false, name: "Indonesian", nativeName:"Bahasa Indonesia" },
-            "ie" => { rtl: false, name: "Interlingue", nativeName:"Interlingue" },
-            "ga" => { rtl: false, name: "Irish", nativeName:"Gaeilge" },
-            "ig" => { rtl: false, name: "Igbo", nativeName:"Asụsụ Igbo" },
-            "ik" => { rtl: false, name: "Inupiaq", nativeName:"Iñupiaq,Iñupiatun" },
-            "io" => { rtl: false, name: "Ido", nativeName:"Ido" },
-            "is" => { rtl: false, name: "Icelandic", nativeName:"Íslenska" },
-            "it" => { rtl: false, name: "Italian", nativeName:"Italiano" },
-            "iu" => { rtl: false, name: "Inuktitut", nativeName:"ᐃᓄᒃᑎᑐᑦ" },
-            "ja" => { rtl: false, name: "Japanese", nativeName:"日本語" },
-            "jv" => { rtl: false, name: "Javanese", nativeName:"basa Jawa" },
-            "kl" => { rtl: false, name: "Kalaallisut,Greenlandic", nativeName:"kalaallisut" },
-            "kn" => { rtl: false, name: "Kannada", nativeName:"ಕನ್ನಡ" },
-            "kr" => { rtl: false, name: "Kanuri", nativeName:"Kanuri" },
-            "ks" => { rtl: true,  name: "Kashmiri", nativeName:"कश्मीरी"   },
-            "kk" => { rtl: false, name: "Kazakh", nativeName:"Қазақ тілі" },
-            "km" => { rtl: false, name: "Khmer", nativeName:"ភាសាខ្មែរ" },
-            "ki" => { rtl: false, name: "Kikuyu,Gikuyu", nativeName:"Gĩkũyũ" },
-            "rw" => { rtl: false, name: "Kinyarwanda", nativeName:"Ikinyarwanda" },
-            "ky" => { rtl: false, name: "Kirghiz,Kyrgyz", nativeName:"кыргыз тили" },
-            "kv" => { rtl: false, name: "Komi", nativeName:"коми кыв" },
-            "kg" => { rtl: false, name: "Kongo", nativeName:"KiKongo" },
-            "ko" => { rtl: false, name: "Korean", nativeName:"한국어" },
-            "ku" => { rtl: true,  name: "Kurdish", nativeName:"कश्मीरी"   },
-            "kj" => { rtl: false, name: "Kwanyama,Kuanyama", nativeName:"Kuanyama" },
-            "la" => { rtl: false, name: "Latin", nativeName:"latine" },
-            "lb" => { rtl: false, name: "Luxembourgish,Letzeburgesch", nativeName:"Lëtzebuergesch" },
-            "lg" => { rtl: false, name: "Luganda", nativeName:"Luganda" },
-            "li" => { rtl: false, name: "Limburgish,Limburgan,Limburger", nativeName:"Limburgs" },
-            "ln" => { rtl: false, name: "Lingala", nativeName:"Lingála" },
-            "lo" => { rtl: false, name: "Lao", nativeName:"ພາສາລາວ" },
-            "lt" => { rtl: false, name: "Lithuanian", nativeName:"lietuvių kalba" },
-            "lu" => { rtl: false, name: "Luba-Katanga", nativeName:"Kiluba" },
-            "lv" => { rtl: false, name: "Latvian", nativeName:"latviešu valoda" },
-            "gv" => { rtl: false, name: "Manx", nativeName:"Gaelg,Gailck" },
-            "mk" => { rtl: false, name: "Macedonian", nativeName:"македонски јазик" },
-            "mg" => { rtl: false, name: "Malagasy", nativeName:"Malagasy fiteny" },
-            "ml" => { rtl: false, name: "Malayalam", nativeName:"മലയാളം" },
-            "mt" => { rtl: false, name: "Maltese", nativeName:"Malti" },
-            "mi" => { rtl: false, name: "Maori", nativeName:"te reo Māori" },
-            "mr" => { rtl: false, name: "Marathi", nativeName:"मराठी" },
-            "mh" => { rtl: false, name: "Marshallese", nativeName:"Kajin M̧ajeļ" },
-            "mn" => { rtl: false, name: "Mongolian", nativeName:"монгол" },
-            "na" => { rtl: false, name: "Nauru", nativeName:"Ekakairũ Naoero" },
-            "nv" => { rtl: false, name: "Navajo,Navaho", nativeName:"Diné bizaad,Dinékʼehǰí" },
-            "nb" => { rtl: false, name: "Norwegian Bokmal", nativeName:"Norsk bokmål" },
-            "nd" => { rtl: false, name: "North Ndebele", nativeName:"isiNdebele" },
-            "ne" => { rtl: false, name: "Nepali", nativeName:"नेपाली" },
-            "ng" => { rtl: false, name: "Ndonga", nativeName:"Owambo" },
-            "nn" => { rtl: false, name: "Norwegian Nynorsk", nativeName:"Norsk nynorsk" },
-            "no" => { rtl: false, name: "Norwegian", nativeName:"Norsk" },
-            "ii" => { rtl: false, name: "Nuosu", nativeName:"ꆈꌠ꒿ Nuosuhxop" },
-            "nr" => { rtl: false, name: "South Ndebele", nativeName:"isiNdebele" },
-            "oc" => { rtl: false, name: "Occitan", nativeName:"Occitan" },
-            "oj" => { rtl: false, name: "Ojibwe,Ojibwa", nativeName:"ᐊᓂᔑᓈᐯᒧᐎᓐ" },
-            "cu" => { rtl: false, name: "Old Church Slavonic,Church Slavic,Church Slavonic,Old Bulgarian,Old Slavonic", nativeName:"ѩзыкъ словѣньскъ" },
-            "om" => { rtl: false, name: "Oromo", nativeName:"Afaan Oromoo" },
-            "or" => { rtl: false, name: "Oriya", nativeName:"ଓଡ଼ିଆ" },
-            "os" => { rtl: false, name: "Ossetian,Ossetic", nativeName:"ирон æвзаг" },
-            "pa" => { rtl: true,  name: "Panjabi,Punjabi", nativeName:"ਪੰਜਾਬੀ, پنجابی‎" },
-            "pi" => { rtl: false, name: "Pali", nativeName:"पाऴि" },
-            "fa" => { rtl: true,  name: "Persian", nativeName:"فارسی" },
-            "pl" => { rtl: false, name: "Polish", nativeName:"polski" },
-            "ps" => { rtl: true,  name: "Pashto,Pushto", nativeName:"پښتو" },
-            "pt" => { rtl: false, name: "Portuguese", nativeName:"Português" },
-            "qu" => { rtl: false, name: "Quechua", nativeName:"Runa Simi,Kichwa" },
-            "rm" => { rtl: false, name: "Romansh", nativeName:"rumantsch grischun" },
-            "rn" => { rtl: false, name: "Kirundi", nativeName:"kiRundi" },
-            "ro" => { rtl: false, name: "Romanian,Moldavian,Moldovan", nativeName:"română" },
-            "ru" => { rtl: false, name: "Russian", nativeName:"русский язык" },
-            "sa" => { rtl: false, name: "Sanskrit", nativeName:"संस्कृतम्" },
-            "sc" => { rtl: false, name: "Sardinian", nativeName:"sardu" },
-            "sd" => { rtl: true,  name: "Sindhi", nativeName:"सिन्धी, سنڌي، سندھی‎" },
-            "se" => { rtl: false, name: "Northern Sami", nativeName:"Davvisámegiella" },
-            "sm" => { rtl: false, name: "Samoan", nativeName:"gagana faa Samoa" },
-            "sg" => { rtl: false, name: "Sango", nativeName:"yângâ tî sängö" },
-            "sr" => { rtl: false, name: "Serbian", nativeName:"српски језик" },
-            "gd" => { rtl: false, name: "Gaelic", nativeName:"Gàidhlig" },
-            "sn" => { rtl: false, name: "Shona", nativeName:"chiShona" },
-            "si" => { rtl: false, name: "Sinhala,Sinhalese", nativeName:"සිංහල" },
-            "sk" => { rtl: false, name: "Slovak", nativeName:"slovenčina" },
-            "sl" => { rtl: false, name: "Slovene", nativeName:"slovenščina" },
-            "so" => { rtl: false, name: "Somali", nativeName:"Soomaaliga,af Soomaali" },
-            "st" => { rtl: false, name: "Southern Sotho", nativeName:"Sesotho" },
-            "es" => { rtl: false, name: "Spanish,Castilian", nativeName:"español,castellano" },
-            "su" => { rtl: false, name: "Sundanese", nativeName:"Basa Sunda" },
-            "sw" => { rtl: false, name: "Swahili", nativeName:"Kiswahili" },
-            "ss" => { rtl: false, name: "Swati", nativeName:"SiSwati" },
-            "sv" => { rtl: false, name: "Swedish", nativeName:"svenska" },
-            "ta" => { rtl: false, name: "Tamil", nativeName:"தமிழ்" },
-            "te" => { rtl: false, name: "Telugu", nativeName:"తెలుగు" },
-            "tg" => { rtl: true,  name: "Tajik", nativeName:"тоҷикӣ,toğikī,تاجیکی‎" },
-            "th" => { rtl: false, name: "Thai", nativeName:"ไทย" },
-            "ti" => { rtl: false, name: "Tigrinya", nativeName:"ትግርኛ" },
-            "bo" => { rtl: false, name: "Tibetan Standard,Tibetan,Central", nativeName:"བོད་ཡིག" },
-            "tk" => { rtl: false, name: "Turkmen", nativeName:"Türkmen,Түркмен" },
-            "tl" => { rtl: false, name: "Tagalog", nativeName:"Wikang Tagalog,ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔" },
-            "tn" => { rtl: false, name: "Tswana", nativeName:"Setswana" },
-            "to" => { rtl: false, name: "Tonga", nativeName:"faka Tonga" },
-            "tr" => { rtl: true,  name: "Turkish", nativeName:"Türkçe" },
-            "ts" => { rtl: false, name: "Tsonga", nativeName:"Xitsonga" },
-            "tt" => { rtl: false, name: "Tatar", nativeName:"татарча,tatarça,تاتارچا‎" },
-            "tw" => { rtl: false, name: "Twi", nativeName:"Twi" },
-            "ty" => { rtl: false, name: "Tahitian", nativeName:"Reo Tahiti" },
-            "ug" => { rtl: true,  name: "Uighur,Uyghur", nativeName:"Uyƣurqə,ئۇيغۇرچە‎" },
-            "uk" => { rtl: false, name: "Ukrainian", nativeName:"українська" },
-            "ur" => { rtl: true,  name: "Urdu", nativeName:"اردو" },
-            "uz" => { rtl: true,  name: "Uzbek", nativeName:"zbek,Ўзбек,أۇزبېك‎" },
-            "ve" => { rtl: false, name: "Venda", nativeName:"Tshivenḓa" },
-            "vi" => { rtl: false, name: "Vietnamese", nativeName:"Tiếng Việt" },
-            "vo" => { rtl: false, name: "Volapuk", nativeName:"Volapük" },
-            "wa" => { rtl: false, name: "Walloon", nativeName:"Walon" },
-            "cy" => { rtl: false, name: "Welsh", nativeName:"Cymraeg" },
-            "wo" => { rtl: false, name: "Wolof", nativeName:"Wollof" },
-            "fy" => { rtl: false, name: "Western Frisian", nativeName:"Frysk" },
-            "xh" => { rtl: false, name: "Xhosa", nativeName:"isiXhosa" },
-            "yi" => { rtl: true,  name: "Yiddish", nativeName: "ייִדיש‎" },
-            "yo" => { rtl: false, name: "Yoruba", nativeName:"Yorùbá" },
-            "za" => { rtl: false, name: "Zhuang,Chuang", nativeName:"Saɯ cueŋƅ" }
+            "ab" => { rtl: false, en: "Abkhaz", native:"аҧсуа" },
+            "aa" => { rtl: false, en: "Afar", native:"Afaraf" },
+            "af" => { rtl: false, en: "Afrikaans", native:"Afrikaans" },
+            "ak" => { rtl: false, en: "Akan", native:"Akan" },
+            "sq" => { rtl: false, en: "Albanian", native:"Shqip" },
+            "am" => { rtl: false, en: "Amharic", native:"አማርኛ" },
+            "ar" => { rtl: true,  en: "Arabic", native: "العربية" },
+            "an" => { rtl: false, en: "Aragonese", native:"Aragonés" },
+            "hy" => { rtl: false, en: "Armenian", native:"Հայերեն" },
+            "as" => { rtl: false, en: "Assamese", native:"অসমীয়া" },
+            "av" => { rtl: false, en: "Avaric", native:"авар мацӀ, магӀарул мацӀ" },
+            "ae" => { rtl: false, en: "Avestan", native:"avesta" },
+            "ay" => { rtl: false, en: "Aymara", native:"aymar aru" },
+            "az" => { rtl: false, en: "Azerbaijani", native:"azərbaycan dili" },
+            "bm" => { rtl: false, en: "Bambara", native:"bamanankan" },
+            "ba" => { rtl: false, en: "Bashkir", native:"башҡорт теле" },
+            "eu" => { rtl: false, en: "Basque", native:"euskara,euskera" },
+            "be" => { rtl: false, en: "Belarusian", native:"Беларуская" },
+            "bn" => { rtl: false, en: "Bengali", native:"বাংলা" },
+            "bh" => { rtl: false, en: "Bihari", native:"भोजपुरी" },
+            "bi" => { rtl: false, en: "Bislama", native:"Bislama" },
+            "bs" => { rtl: false, en: "Bosnian", native:"bosanski jezik" },
+            "br" => { rtl: false, en: "Breton", native:"brezhoneg" },
+            "bg" => { rtl: false, en: "Bulgarian", native:"български език" },
+            "my" => { rtl: false, en: "Burmese", native:"ဗမာစာ" },
+            "ca" => { rtl: false, en: "Catalan,Valencian", native:"Català" },
+            "ch" => { rtl: false, en: "Chamorro", native:"Chamoru" },
+            "ce" => { rtl: false, en: "Chechen", native:"нохчийн мотт" },
+            "ny" => { rtl: false, en: "Chichewa,Chewa,Nyanja", native:"chinyanja,chiCheŵa" },
+            "zh" => { rtl: false, en: "Chinese", native:"中文,汉语,漢語" },
+            "cv" => { rtl: false, en: "Chuvash", native:"чӑваш чӗлхи" },
+            "kw" => { rtl: false, en: "Cornish", native:"Kernewek" },
+            "co" => { rtl: false, en: "Corsican", native:"corsu" },
+            "cr" => { rtl: false, en: "Cree", native:"ᓀᐦᐃᔭᐍᐏᐣ" },
+            "hr" => { rtl: false, en: "Croatian", native:"hrvatski" },
+            "cs" => { rtl: false, en: "Czech", native:"česky,čeština" },
+            "da" => { rtl: false, en: "Danish", native:"dansk" },
+            "dv" => { rtl: true,  en: "Divehi,Dhivehi,Maldivian", native:"ދިވެހި" },
+            "nl" => { rtl: false, en: "Dutch", native:"Nederlands,Vlaams" },
+            "en" => { rtl: false, en: "English", native:"English" },
+            "eo" => { rtl: false, en: "Esperanto", native:"Esperanto" },
+            "et" => { rtl: false, en: "Estonian", native:"eesti" },
+            "ee" => { rtl: false, en: "Ewe", native:"Eʋegbe" },
+            "fo" => { rtl: false, en: "Faroese", native:"føroyskt" },
+            "fj" => { rtl: false, en: "Fijian", native:"vosa Vakaviti" },
+            "fi" => { rtl: false, en: "Finnish", native:"suomi" },
+            "fr" => { rtl: false, en: "French", native:"français" },
+            "ff" => { rtl: false, en: "Fula,Fulahr,Pulaarr,Pular", native:"Fulfulde,Pulaar,Pular" },
+            "gl" => { rtl: false, en: "Galician", native:"Galego" },
+            "ka" => { rtl: false, en: "Georgian", native:"ქართული" },
+            "de" => { rtl: false, en: "German", native:"Deutsch" },
+            "el" => { rtl: false, en: "Greek", native:"Ελληνικά" },
+            "gn" => { rtl: false, en: "Guarani", native:"Avañeẽ" },
+            "gu" => { rtl: false, en: "Gujarati", native:"ગુજરાતી" },
+            "ht" => { rtl: false, en: "Haitian,Haitian Creole", native:"Kreyòl ayisyen" },
+            "ha" => { rtl: true,  en: "Hausa", native:"هَوُسَ" },
+            "he" => { rtl: true,  en: "Hebrew", native:"עברית‎"},
+            "hz" => { rtl: false, en: "Herero", native:"Otjiherero" },
+            "hi" => { rtl: false, en: "Hindi", native:"हिन्दी, हिंदी" },
+            "ho" => { rtl: false, en: "Hiri Motu", native:"Hiri Motu" },
+            "hu" => { rtl: false, en: "Hungarian", native:"Magyar" },
+            "ia" => { rtl: false, en: "Interlingua", native:"Interlingua" },
+            "id" => { rtl: false, en: "Indonesian", native:"Bahasa Indonesia" },
+            "ie" => { rtl: false, en: "Interlingue", native:"Interlingue" },
+            "ga" => { rtl: false, en: "Irish", native:"Gaeilge" },
+            "ig" => { rtl: false, en: "Igbo", native:"Asụsụ Igbo" },
+            "ik" => { rtl: false, en: "Inupiaq", native:"Iñupiaq,Iñupiatun" },
+            "io" => { rtl: false, en: "Ido", native:"Ido" },
+            "is" => { rtl: false, en: "Icelandic", native:"Íslenska" },
+            "it" => { rtl: false, en: "Italian", native:"Italiano" },
+            "iu" => { rtl: false, en: "Inuktitut", native:"ᐃᓄᒃᑎᑐᑦ" },
+            "ja" => { rtl: false, en: "Japanese", native:"日本語" },
+            "jv" => { rtl: false, en: "Javanese", native:"basa Jawa" },
+            "kl" => { rtl: false, en: "Kalaallisut,Greenlandic", native:"kalaallisut" },
+            "kn" => { rtl: false, en: "Kannada", native:"ಕನ್ನಡ" },
+            "kr" => { rtl: false, en: "Kanuri", native:"Kanuri" },
+            "ks" => { rtl: true,  en: "Kashmiri", native:"कश्मीरी"   },
+            "kk" => { rtl: false, en: "Kazakh", native:"Қазақ тілі" },
+            "km" => { rtl: false, en: "Khmer", native:"ភាសាខ្មែរ" },
+            "ki" => { rtl: false, en: "Kikuyu,Gikuyu", native:"Gĩkũyũ" },
+            "rw" => { rtl: false, en: "Kinyarwanda", native:"Ikinyarwanda" },
+            "ky" => { rtl: false, en: "Kirghiz,Kyrgyz", native:"кыргыз тили" },
+            "kv" => { rtl: false, en: "Komi", native:"коми кыв" },
+            "kg" => { rtl: false, en: "Kongo", native:"KiKongo" },
+            "ko" => { rtl: false, en: "Korean", native:"한국어" },
+            "ku" => { rtl: true,  en: "Kurdish", native:"कश्मीरी"   },
+            "kj" => { rtl: false, en: "Kwanyama,Kuanyama", native:"Kuanyama" },
+            "la" => { rtl: false, en: "Latin", native:"latine" },
+            "lb" => { rtl: false, en: "Luxembourgish,Letzeburgesch", native:"Lëtzebuergesch" },
+            "lg" => { rtl: false, en: "Luganda", native:"Luganda" },
+            "li" => { rtl: false, en: "Limburgish,Limburgan,Limburger", native:"Limburgs" },
+            "ln" => { rtl: false, en: "Lingala", native:"Lingála" },
+            "lo" => { rtl: false, en: "Lao", native:"ພາສາລາວ" },
+            "lt" => { rtl: false, en: "Lithuanian", native:"lietuvių kalba" },
+            "lu" => { rtl: false, en: "Luba-Katanga", native:"Kiluba" },
+            "lv" => { rtl: false, en: "Latvian", native:"latviešu valoda" },
+            "gv" => { rtl: false, en: "Manx", native:"Gaelg,Gailck" },
+            "mk" => { rtl: false, en: "Macedonian", native:"македонски јазик" },
+            "mg" => { rtl: false, en: "Malagasy", native:"Malagasy fiteny" },
+            "ml" => { rtl: false, en: "Malayalam", native:"മലയാളം" },
+            "mt" => { rtl: false, en: "Maltese", native:"Malti" },
+            "mi" => { rtl: false, en: "Maori", native:"te reo Māori" },
+            "mr" => { rtl: false, en: "Marathi", native:"मराठी" },
+            "mh" => { rtl: false, en: "Marshallese", native:"Kajin M̧ajeļ" },
+            "mn" => { rtl: false, en: "Mongolian", native:"монгол" },
+            "na" => { rtl: false, en: "Nauru", native:"Ekakairũ Naoero" },
+            "nv" => { rtl: false, en: "Navajo,Navaho", native:"Diné bizaad,Dinékʼehǰí" },
+            "nb" => { rtl: false, en: "Norwegian Bokmal", native:"Norsk bokmål" },
+            "nd" => { rtl: false, en: "North Ndebele", native:"isiNdebele" },
+            "ne" => { rtl: false, en: "Nepali", native:"नेपाली" },
+            "ng" => { rtl: false, en: "Ndonga", native:"Owambo" },
+            "nn" => { rtl: false, en: "Norwegian Nynorsk", native:"Norsk nynorsk" },
+            "no" => { rtl: false, en: "Norwegian", native:"Norsk" },
+            "ii" => { rtl: false, en: "Nuosu", native:"ꆈꌠ꒿ Nuosuhxop" },
+            "nr" => { rtl: false, en: "South Ndebele", native:"isiNdebele" },
+            "oc" => { rtl: false, en: "Occitan", native:"Occitan" },
+            "oj" => { rtl: false, en: "Ojibwe,Ojibwa", native:"ᐊᓂᔑᓈᐯᒧᐎᓐ" },
+            "cu" => { rtl: false, en: "Old Church Slavonic,Church Slavic,Church Slavonic,Old Bulgarian,Old Slavonic", native:"ѩзыкъ словѣньскъ" },
+            "om" => { rtl: false, en: "Oromo", native:"Afaan Oromoo" },
+            "or" => { rtl: false, en: "Oriya", native:"ଓଡ଼ିଆ" },
+            "os" => { rtl: false, en: "Ossetian,Ossetic", native:"ирон æвзаг" },
+            "pa" => { rtl: true,  en: "Panjabi,Punjabi", native:"ਪੰਜਾਬੀ, پنجابی‎" },
+            "pi" => { rtl: false, en: "Pali", native:"पाऴि" },
+            "fa" => { rtl: true,  en: "Persian", native:"فارسی" },
+            "pl" => { rtl: false, en: "Polish", native:"polski" },
+            "ps" => { rtl: true,  en: "Pashto,Pushto", native:"پښتو" },
+            "pt" => { rtl: false, en: "Portuguese", native:"Português" },
+            "qu" => { rtl: false, en: "Quechua", native:"Runa Simi,Kichwa" },
+            "rm" => { rtl: false, en: "Romansh", native:"rumantsch grischun" },
+            "rn" => { rtl: false, en: "Kirundi", native:"kiRundi" },
+            "ro" => { rtl: false, en: "Romanian,Moldavian,Moldovan", native:"română" },
+            "ru" => { rtl: false, en: "Russian", native:"русский язык" },
+            "sa" => { rtl: false, en: "Sanskrit", native:"संस्कृतम्" },
+            "sc" => { rtl: false, en: "Sardinian", native:"sardu" },
+            "sd" => { rtl: true,  en: "Sindhi", native:"सिन्धी, سنڌي، سندھی‎" },
+            "se" => { rtl: false, en: "Northern Sami", native:"Davvisámegiella" },
+            "sm" => { rtl: false, en: "Samoan", native:"gagana faa Samoa" },
+            "sg" => { rtl: false, en: "Sango", native:"yângâ tî sängö" },
+            "sr" => { rtl: false, en: "Serbian", native:"српски језик" },
+            "gd" => { rtl: false, en: "Gaelic", native:"Gàidhlig" },
+            "sn" => { rtl: false, en: "Shona", native:"chiShona" },
+            "si" => { rtl: false, en: "Sinhala,Sinhalese", native:"සිංහල" },
+            "sk" => { rtl: false, en: "Slovak", native:"slovenčina" },
+            "sl" => { rtl: false, en: "Slovene", native:"slovenščina" },
+            "so" => { rtl: false, en: "Somali", native:"Soomaaliga,af Soomaali" },
+            "st" => { rtl: false, en: "Southern Sotho", native:"Sesotho" },
+            "es" => { rtl: false, en: "Spanish,Castilian", native:"español,castellano" },
+            "su" => { rtl: false, en: "Sundanese", native:"Basa Sunda" },
+            "sw" => { rtl: false, en: "Swahili", native:"Kiswahili" },
+            "ss" => { rtl: false, en: "Swati", native:"SiSwati" },
+            "sv" => { rtl: false, en: "Swedish", native:"svenska" },
+            "ta" => { rtl: false, en: "Tamil", native:"தமிழ்" },
+            "te" => { rtl: false, en: "Telugu", native:"తెలుగు" },
+            "tg" => { rtl: true,  en: "Tajik", native:"тоҷикӣ,toğikī,تاجیکی‎" },
+            "th" => { rtl: false, en: "Thai", native:"ไทย" },
+            "ti" => { rtl: false, en: "Tigrinya", native:"ትግርኛ" },
+            "bo" => { rtl: false, en: "Tibetan Standard,Tibetan,Central", native:"བོད་ཡིག" },
+            "tk" => { rtl: false, en: "Turkmen", native:"Türkmen,Түркмен" },
+            "tl" => { rtl: false, en: "Tagalog", native:"Wikang Tagalog,ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔" },
+            "tn" => { rtl: false, en: "Tswana", native:"Setswana" },
+            "to" => { rtl: false, en: "Tonga", native:"faka Tonga" },
+            "tr" => { rtl: true,  en: "Turkish", native:"Türkçe" },
+            "ts" => { rtl: false, en: "Tsonga", native:"Xitsonga" },
+            "tt" => { rtl: false, en: "Tatar", native:"татарча,tatarça,تاتارچا‎" },
+            "tw" => { rtl: false, en: "Twi", native:"Twi" },
+            "ty" => { rtl: false, en: "Tahitian", native:"Reo Tahiti" },
+            "ug" => { rtl: true,  en: "Uighur,Uyghur", native:"Uyƣurqə,ئۇيغۇرچە‎" },
+            "uk" => { rtl: false, en: "Ukrainian", native:"українська" },
+            "ur" => { rtl: true,  en: "Urdu", native:"اردو" },
+            "uz" => { rtl: true,  en: "Uzbek", native:"zbek,Ўзбек,أۇزبېك‎" },
+            "ve" => { rtl: false, en: "Venda", native:"Tshivenḓa" },
+            "vi" => { rtl: false, en: "Vietense", native:"Tiếng Việt" },
+            "vo" => { rtl: false, en: "Volapuk", native:"Volapük" },
+            "wa" => { rtl: false, en: "Walloon", native:"Walon" },
+            "cy" => { rtl: false, en: "Welsh", native:"Cymraeg" },
+            "wo" => { rtl: false, en: "Wolof", native:"Wollof" },
+            "fy" => { rtl: false, en: "Western Frisian", native:"Frysk" },
+            "xh" => { rtl: false, en: "Xhosa", native:"isiXhosa" },
+            "yi" => { rtl: true,  en: "Yiddish", native: "ייִדיש‎" },
+            "yo" => { rtl: false, en: "Yoruba", native:"Yorùbá" },
+            "za" => { rtl: false, en: "Zhuang,Chuang", native:"Saɯ cueŋƅ" }
         ];
         for (k => v in customized) {
             var o = d.get(k);
             if (o == null) throw "No such language " + k + " iso639-1 code";
-            if (v.name       != null) o.name       = v.name;
-            if (v.nativeName != null) o.nativeName = v.nativeName;
-            if (v.rtl        != null) o.rtl        = v.rtl ;
+            if (v.en     != null) o.en       = v.en;
+            if (v.native != null) o.native   = v.native;
+            if (v.rtl    != null) o.rtl      = v.rtl ;
             d.set(k, o); 
         }
         _map = [ for ( k => v in d )
             k => { 
+                code       : k,
+                en         : v.en.split(",")[0],
+                native     : v.native.split(",")[0],
                 rtl        : v.rtl,
-                name       : v.name.split(",")[0],
-                nativeName : v.nativeName.split(",")[0]
             } 
         ];
     }
@@ -222,21 +230,41 @@ import tink.pure.Mapping;
     public function exists(code:String) : Bool 
         return _map.exists(code);
 
+    public function lg(code:String) : Option<Lg> 
+        return _map.exists(code) ? Some(_map.get(code)) : None;
+
+    public function name(code:String) : Option<String> 
+        return _map.exists(code) ? Some(_map.get(code).en) : None;
+
+    public function nativeName(code:String) : Option<String> 
+        return _map.exists(code) ? Some(_map.get(code).native) : None;
+
     public function isRightToLeft(code:String) : Option<Bool> 
         return _map.exists(code) ? Some(_map.get(code).rtl) : None;
 
-    public function name(code:String) : Option<String> 
-        return _map.exists(code) ? Some(_map.get(code).name) : None;
-
-    public function nativeName(code:String) : Option<String> 
-        return _map.exists(code) ? Some(_map.get(code).nativeName) : None;
-
-    /** Sorted list of keys */
-    public function list() : List<String> {
-        var a = [ for (k in _map.keys()) k ];
+    /** 
+     * List of languages sorted by key.
+     * You'll probably want to cache this in your app:
+     * @example
+     * private static final _iso639_1 = new Iso639_1();
+     * public static final lgs : tink.pure.List<Lg> = _iso639_1.array();
+     * public inline static function lg(code:String) : haxe.ds.Option<Lg> return _iso639_1.lg(code);
+     * @endexample
+     */
+    public function array() : Array<Lg> {
+        var aKeys = [ for (k in _map.keys()) k ];
         function cmp (a:String,b:String):Int { return if (a<b) -1 else if (a>b) 1 else 0; }
-        a.sort(cmp); 
-        return Lambda.list(a);
+        aKeys.sort(cmp); 
+        var a = [];
+        for (code in aKeys) {
+            switch lg(code) {
+                case Some(v): a.push(v);
+                case None:
+            }
+        }
+        return a;
     }
+
+    public function list() : List<Lg> return Lambda.list(array());
 
 }

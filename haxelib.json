@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["iso", "iso639-1", "lg", "languages", "i18n"],
   "description": "Class mapping 2-letter language iso639-1 standard codes to `english name` and `native name`",
-  "version": "1.0.1-alpha",
-  "releasenote": "Class is now marked @:pure, customizations are available at instantitation.",
+  "version": "1.1.0",
+  "releasenote": "using a typedef Lg",
   "contributors": ["grepsuzette"],
   "dependencies": {
 
